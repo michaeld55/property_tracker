@@ -36,6 +36,22 @@ class PropertyTracker
 
   end
 
+  def update()
+
+    db = PG.connect({dbname: "property_tracker", host: "localhost" })
+    sql = " UPDATE property_tracker
+            SET address = $1,
+                value = $2,
+                bedrooms = $3,
+                year_built = $4
+            WHERE id = $5"
+    values = [ @address, @value, @bedrooms, @year_built, @id ]
+    db.prepare( "update", sql )
+    db.exec_prepared( "update", values )
+    db.close()
+    
+  end
+
   def self.all()
 
     db = PG.connect({dbname: "property_tracker", host: "localhost" })
