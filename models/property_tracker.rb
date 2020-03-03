@@ -29,7 +29,7 @@ class PropertyTracker
 
     db = PG.connect({dbname: "property_tracker", host: "localhost" })
     sql = "DELETE FROM property_tracker WHERE id = $1"
-    values = [ @id]
+    values = [ @id ]
     db.prepare( "delete", sql )
     db.exec_prepared( "delete", values )
     db.close()
@@ -49,7 +49,32 @@ class PropertyTracker
     db.prepare( "update", sql )
     db.exec_prepared( "update", values )
     db.close()
-    
+
+  end
+
+  def self.find_by_id( searched_id )
+
+      db = PG.connect({dbname: "property_tracker", host: "localhost" })
+      sql = "SELECT * FROM property_tracker WHERE id = $1"
+      values = [ searched_id ]
+      db.prepare( "find_by_id", sql )
+      result = db.exec_prepared( "find_by_id", values)
+      db.close()
+      return result.map { |property| PropertyTracker.new(property)   }
+
+  end
+
+  def self.find_by_address( searched_address )
+
+    db = PG.connect({dbname: "property_tracker", host: "localhost" })
+    sql = "SELECT * FROM property_tracker WHERE address = $1"
+    values = [ searched_address ]
+    db.prepare( "find_by_address", sql )
+    result = db.exec_prepared( "find_by_address", values)
+    db.close()
+    result = result.map { |property| PropertyTracker.new(property) }
+    return result.length() == 0 ? nil : result
+
   end
 
   def self.all()
