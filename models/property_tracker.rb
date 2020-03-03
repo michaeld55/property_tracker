@@ -73,7 +73,8 @@ class PropertyTracker
     result = db.exec_prepared( "find_by_address", values)
     db.close()
     result = result.map { |property| PropertyTracker.new(property) }
-    return result.length() == 0 ? nil : result
+    # return result.length() == 0 ? nil : result
+    return result if result.size > 0
 
   end
 
